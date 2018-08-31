@@ -47,28 +47,28 @@ if __name__ == '__main__':
         
         while True:
 
-            GPIO.output(GPIO_Ain1, True)
+            '''GPIO.output(GPIO_Ain1, True)
             GPIO.output(GPIO_Ain2, False)
             GPIO.output(GPIO_Bin1, True)
             GPIO.output(GPIO_Bin2, False)
             pwmA.ChangeDutyCycle(50)                # duty cycle between 0 and 100
             pwmB.ChangeDutyCycle(50)                # duty cycle between 0 and 100
             print ("Forward half speed")
-            time.sleep(1)
+            time.sleep(1)'''
 
             GPIO.output(GPIO_Ain1, True)
             GPIO.output(GPIO_Ain2, False)
-            GPIO.output(GPIO_Bin1, True)
-            GPIO.output(GPIO_Bin2, False)
-            pwmA.ChangeDutyCycle(100)               # duty cycle between 0 and 100
-            pwmB.ChangeDutyCycle(100)               # duty cycle between 0 and 100
+            GPIO.output(GPIO_Bin1, False)
+            GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
+            pwmA.ChangeDutyCycle(50)               # duty cycle between 0 and 100
+            pwmB.ChangeDutyCycle(50)               # duty cycle between 0 and 100
             print ("Forward full speed")
             time.sleep(1)
             
             GPIO.output(GPIO_Ain1, False)
             GPIO.output(GPIO_Ain2, True)
-            GPIO.output(GPIO_Bin1, False)
-            GPIO.output(GPIO_Bin2, True)
+            GPIO.output(GPIO_Bin1, True)
+            GPIO.output(GPIO_Bin2, False)
             pwmA.ChangeDutyCycle(33)                # duty cycle between 0 and 100
             pwmB.ChangeDutyCycle(33)                # duty cycle between 0 and 100
             print ("Backward third speed")
