@@ -11,7 +11,7 @@ import numpy as np
 
 def nothing(x):
     pass
-
+#window 1 w/sliders is max HSV vals and window 2 w/sliders is min HSV vals
 # Create a window for later use by the track bar
 cv2.namedWindow('result1')
 h1, s1, v1 = 100, 100, 100
@@ -29,7 +29,7 @@ cv2.createTrackbar('v1','result1', 0, 255, nothing)
 
 cv2.createTrackbar('h2','result2', 0, 255, nothing)
 cv2.createTrackbar('s2','result2', 0, 255, nothing)
-cv2.createTrackbar('v2','result2', 0, 255, nothing)
+cv2.createTrackbar('v2','result2', 0, 255, nothing) 
 
 
 # Initialize the camera and grab a reference to the frame

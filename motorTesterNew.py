@@ -31,7 +31,7 @@ GPIO.output(GPIO_Bin2, False)
 # Set PWM parameters
 pwm_frequency = 50
 
-# Create the PWM instances
+# Create the PWM instances  
 pwmA = GPIO.PWM(GPIO_Apwm, pwm_frequency)
 pwmB = GPIO.PWM(GPIO_Bpwm, pwm_frequency)
 
@@ -59,7 +59,7 @@ if __name__ == '__main__':
             GPIO.output(GPIO_Ain1, True)
             GPIO.output(GPIO_Ain2, False)
             GPIO.output(GPIO_Bin1, False)
-            GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
+            GPIO.output(GPIO_Bin2, True) #Makes other wheel(L) move forward too
             pwmA.ChangeDutyCycle(50)               # duty cycle between 0 and 100
             pwmB.ChangeDutyCycle(50)               # duty cycle between 0 and 100
             print ("Forward full speed")
@@ -74,6 +74,17 @@ if __name__ == '__main__':
             print ("Backward third speed")
             time.sleep(1)
 
+            #Turn Left
+            GPIO.output(GPIO_Ain1, True)
+            GPIO.output(GPIO_Ain2, False)
+            GPIO.output(GPIO_Bin1, False)
+            GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
+            pwmA.ChangeDutyCycle(75)               # left wheel slower
+            pwmB.ChangeDutyCycle(20)               # left wheel slower
+            print ("Forward full speed")
+            time.sleep(1)
+
+            
             GPIO.output(GPIO_Ain1, False)
             GPIO.output(GPIO_Ain2, False)
             GPIO.output(GPIO_Bin1, False)
