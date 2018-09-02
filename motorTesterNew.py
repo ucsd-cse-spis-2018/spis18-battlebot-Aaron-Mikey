@@ -56,15 +56,17 @@ if __name__ == '__main__':
             print ("Forward half speed")
             time.sleep(1)'''
 
+            #Move Forward
             GPIO.output(GPIO_Ain1, True)
             GPIO.output(GPIO_Ain2, False)
             GPIO.output(GPIO_Bin1, False)
-            GPIO.output(GPIO_Bin2, True) #Makes other wheel(L) move forward too
-            pwmA.ChangeDutyCycle(50)               # duty cycle between 0 and 100
-            pwmB.ChangeDutyCycle(50)               # duty cycle between 0 and 100
+            GPIO.output(GPIO_Bin2, True)            #Makes other wheel(L) move forward too
+            pwmA.ChangeDutyCycle(100)               # duty cycle between 0 and 100
+            pwmB.ChangeDutyCycle(100)               # duty cycle between 0 and 100
             print ("Forward full speed")
             time.sleep(1)
-            
+
+            #Move Backward
             GPIO.output(GPIO_Ain1, False)
             GPIO.output(GPIO_Ain2, True)
             GPIO.output(GPIO_Bin1, True)
@@ -78,10 +80,20 @@ if __name__ == '__main__':
             GPIO.output(GPIO_Ain1, True)
             GPIO.output(GPIO_Ain2, False)
             GPIO.output(GPIO_Bin1, False)
+            GPIO.output(GPIO_Bin2, True)    #Makes other wheel move forward too
+            pwmA.ChangeDutyCycle(75)               # right wheel faster
+            pwmB.ChangeDutyCycle(0)               # left wheel slower
+            print ("Turning Left")
+            time.sleep(1)
+
+            #Turn Right
+            GPIO.output(GPIO_Ain1, True)
+            GPIO.output(GPIO_Ain2, False)
+            GPIO.output(GPIO_Bin1, False)
             GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
-            pwmA.ChangeDutyCycle(75)               # left wheel slower
-            pwmB.ChangeDutyCycle(20)               # left wheel slower
-            print ("Forward full speed")
+            pwmA.ChangeDutyCycle(0)               # right wheel slower
+            pwmB.ChangeDutyCycle(75)               # left wheel faster
+            print ("Turning Right")
             time.sleep(1)
 
             
