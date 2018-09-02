@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 import time
 GPIO.setmode(GPIO.BOARD)
 IR_PIN=16
+'''Detects object 7 inches away from it'''
 def readir(pin):
     GPIO.setup(pin,GPIO.OUT)
     GPIO.output(pin,False)
