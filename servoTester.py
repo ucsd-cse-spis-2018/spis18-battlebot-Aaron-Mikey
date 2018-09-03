@@ -35,7 +35,6 @@ pwm_servo = GPIO.PWM(ServoPin, pwm_frequency)
 
 
 
-
 # Main program 
 if __name__ == '__main__':
 
