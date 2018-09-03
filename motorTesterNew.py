@@ -47,15 +47,6 @@ if __name__ == '__main__':
         
         while True:
 
-            '''GPIO.output(GPIO_Ain1, True)
-            GPIO.output(GPIO_Ain2, False)
-            GPIO.output(GPIO_Bin1, True)
-            GPIO.output(GPIO_Bin2, False)
-            pwmA.ChangeDutyCycle(50)                # duty cycle between 0 and 100
-            pwmB.ChangeDutyCycle(50)                # duty cycle between 0 and 100
-            print ("Forward half speed")
-            time.sleep(1)'''
-
             #Move Forward
             GPIO.output(GPIO_Ain1, True)
             GPIO.output(GPIO_Ain2, False)
