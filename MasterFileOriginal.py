@@ -120,3 +120,137 @@ time.sleep(0.1)
 
 
 '''MAAAAAIIIIINNNN METHOD'''
+if __name__ == '__main__':
+    try:
+        # This code repeats forever
+        while True:
+
+            '''SERVOS'''
+            # Move the servo
+            angle = 0
+            pwm_servo.start(set_duty_cycle(angle))
+            print ("Moving to angle 0")
+            time.sleep(0.5)
+                       
+            angle = 100
+            pwm_servo.start(set_duty_cycle(angle))
+            print ("Moving to angle 100")
+            time.sleep(0.5)
+
+
+            #MOTORS
+             #Move Forward
+            GPIO.output(GPIO_Ain1, True)
+            GPIO.output(GPIO_Ain2, False)
+            GPIO.output(GPIO_Bin1, False)
+            GPIO.output(GPIO_Bin2, True)            #Makes other wheel(L) move forward too
+            pwmA.ChangeDutyCycle(100)               # duty cycle between 0 and 100
+            pwmB.ChangeDutyCycle(100)               # duty cycle between 0 and 100
+            print ("Forward full speed")
+            time.sleep(1)
+
+            #Move Backward
+            GPIO.output(GPIO_Ain1, False)
+            GPIO.output(GPIO_Ain2, True)
+            GPIO.output(GPIO_Bin1, True)
+            GPIO.output(GPIO_Bin2, False)
+            pwmA.ChangeDutyCycle(33)                # duty cycle between 0 and 100
+            pwmB.ChangeDutyCycle(33)                # duty cycle between 0 and 100
+            print ("Backward third speed")
+            time.sleep(1)
+
+            #Turn Left
+            GPIO.output(GPIO_Ain1, True)
+            GPIO.output(GPIO_Ain2, False)
+            GPIO.output(GPIO_Bin1, False)
+            GPIO.output(GPIO_Bin2, True)    #Makes other wheel move forward too
+            pwmA.ChangeDutyCycle(75)               # right wheel faster
+            pwmB.ChangeDutyCycle(0)               # left wheel slower
+            print ("Turning Left")
+            time.sleep(1)
+            
+
+            #Turn Right
+            GPIO.output(GPIO_Ain1, True)
+            GPIO.output(GPIO_Ain2, False)
+            GPIO.output(GPIO_Bin1, False)
+            GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
+            pwmA.ChangeDutyCycle(0)               # right wheel slower
+            pwmB.ChangeDutyCycle(75)               # left wheel faster
+            print ("Turning Right")
+            time.sleep(1)
+
+            
+            GPIO.output(GPIO_Ain1, False)
+            GPIO.output(GPIO_Ain2, False)
+            GPIO.output(GPIO_Bin1, False)
+            GPIO.output(GPIO_Bin2, False)
+            print ("Stop")
+            time.sleep(1)
+
+
+
+
+            #IR PROXIMITY METHOD
+            readir(IR_PIN)
+            time.sleep(0.5)
+
+
+
+            '''CAMERA METHOD'''
+
+            # Continuously capture frames from the camera
+            # Note that the format is BGR instead of RGB because we want to use openCV later on and it only supports BGR
+            for frame in camera.capture_continuous(rawframe, format = 'bgr', use_video_port = True):
+
+                # Clear the stream in preparation for the next frame
+                rawframe.truncate(0)
+
+            
+                # Create a numpy array representing the image
+                image = frame.array     
+
+                #-----------------------------------------------------
+                # We will use numpy and OpenCV for image manipulations
+                #-----------------------------------------------------
+
+                # Convert for BGR to HSV color space, using openCV
+                # The reason is that it is easier to extract colors in the HSV space
+                # Note: the fact that we are using openCV is why the format for the camera.capture was chosen to be BGR
+                image_hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
+
+                # Threshold the HSV image to get only colors in a range
+                # The colors in range are set to white (255), while the colors not in range are set to black (0)
+                ourmask = cv2.inRange(image_hsv, lowerColorThreshold, upperColorThreshold)
+
+                # Count the number of white pixels in the mask
+                numpixels = cv2.countNonZero(ourmask)
+                print("Number of pixels in the color range:", numpixels)
+       
+                # Get the size of the array (the mask is of type 'numpy')
+                # This should be 640 x 480 as defined earlier
+                numx, numy = ourmask.shape
+
+                # Select a part of the image and count the number of white pixels
+                ourmask_center = ourmask[ numx//4 : 3*numx//4 , numy//4 : 3*numy//4 ]
+                numpixels_center = cv2.countNonZero(ourmask_center)
+                print("Number of pixels in the color range in the center part of the image:", numpixels_center)
+           
+                # Bitwise AND of the mask and the original image
+                image_masked = cv2.bitwise_and(image, image, mask = ourmask)
+
+
+                # Show the frames
+                # The waitKey command is needed to force openCV to show the image
+                cv2.imshow("Frame", image)
+                cv2.imshow("Mask", ourmask)
+                cv2.imshow("Masked image", image_masked)  
+                cv2.waitKey(1)
+
+        '''END OF MAIN METHOD RESULTS IN RUNNING SEQUENTIALLY
+        CAUSES SERVO TO TWITCH AT PICTURE DISPLAY'''   
+    # Reset by pressing CTRL + C
+    except KeyboardInterrupt:
+        print("Program stopped by User")
+        GPIO.cleanup()
+
