@@ -11,7 +11,7 @@ import numpy as np
 
 
 # Define the range colors to filter; these numbers represent HSV
-lowerColorThreshold = np.array([120, 57, 0])
+lowerColorThreshold = np.array([120, 161, 100])
 upperColorThreshold = np.array([255, 255, 255])
 
 
