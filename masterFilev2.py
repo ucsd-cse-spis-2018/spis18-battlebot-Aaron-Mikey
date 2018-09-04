@@ -116,7 +116,7 @@ def turnLeft():
     pwmB.ChangeDutyCycle(0)               # left wheel slower
     print ("Turning Left")
     
-    time.sleep(0.3)
+    time.sleep(0.1)
     
 def turnRight():
     #Turn Right
@@ -127,7 +127,7 @@ def turnRight():
     pwmA.ChangeDutyCycle(0)               # right wheel slower
     pwmB.ChangeDutyCycle(75)               # left wheel faster
     print ("Turning Right")
-    time.sleep(0.3)
+    time.sleep(0.1)
 
     
     
