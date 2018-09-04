@@ -37,7 +37,14 @@ GPIO.setup(GPIO_Bin1, GPIO.OUT)
 GPIO.setup(GPIO_Bin2, GPIO.OUT)
 GPIO.setup(GPIO_Bpwm, GPIO.OUT)
 
+'''# Helper function to set the duty cycle
+def set_duty_cycle(angle):
+    return ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
 
+# Create a PWM instance
+pwm_servo = GPIO.PWM(ServoPin, pwm_frequency)
+# --- End of the PWM setup ---'''
+    
 def servoRunner():
     '''SERVO METHOD'''
     # The servo is controlled using Pulse Width Modulation (PWM)
@@ -65,15 +72,10 @@ def servoRunner():
    
     # Create a PWM instance
     pwm_servo = GPIO.PWM(ServoPin, pwm_frequency)
-    # --- End of the PWM setup --
+    # --- End of the PWM setup --'''
+    
 
-'''# Helper function to set the duty cycle
-def set_duty_cycle(angle):
-    return ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
 
-    # Create a PWM instance
-    pwm_servo = GPIO.PWM(ServoPin, pwm_frequency)
-    # --- End of the PWM setup ---'''
 
 
 '''MOTOR METHOD'''
@@ -122,7 +124,7 @@ def motorRunner():
     pwmA.ChangeDutyCycle(75)               # right wheel faster
     pwmB.ChangeDutyCycle(0)               # left wheel slower
     print ("Turning Left")
-    Time.sleep(1)
+    time.sleep(1)
 
     #Turn Right
     GPIO.output(GPIO_Ain1, True)
@@ -224,12 +226,6 @@ def colorDetect():
 
 
 
-
-
-
-
-
-
 '''MAAAAAIIIIINNNN METHOD'''
 if __name__ == '__main__':
     try:
@@ -237,10 +233,10 @@ if __name__ == '__main__':
         while True:
             servoRunner()
             motorRunner()
-            #IR PROXIMITY METHOD
-            readir(IR_PIN)
-            time.sleep(0.5)
-            colorDetect()
+##            #IR PROXIMITY METHOD
+##            readir(IR_PIN)
+##            time.sleep(0.5)
+##            colorDetect()
 
         '''END OF MAIN METHOD RESULTS IN RUNNING SEQUENTIALLY
         CAUSES SERVO TO TWITCH AT PICTURE DISPLAY'''   

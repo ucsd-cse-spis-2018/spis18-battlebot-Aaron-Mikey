@@ -16,7 +16,7 @@ GPIO.setup(GPIO_Servo, GPIO.OUT)
 # Set PWM parameters
 pwm_frequency = 50
 duty_min = 2.5 * float(pwm_frequency) / 50.0
-duty_min = 12.5 * float(pwm_frequency) / 50.0
+duty_max = 12.5 * float(pwm_frequency) / 50.0
 
 
 # Set the duty cycle
@@ -56,56 +56,18 @@ if __name__ == '__main__':
             if (FSM1State == 0):        
 
                 if (currentTime - FSM1LastTime > 1):
-                    angle = 45
+                    angle = 100
                     pwm_servo.start(set_duty_cycle(angle))
                     FSM1NextState = 1
                     FSM1LastTime = currentTime
-                    print ("Move to 45 degrees")
+                    print ("Move to 100 degrees")
 
                 else:
                     FSM1NextState = 0
-
-            # State 1: angle of 45 or on the way there
-            elif (FSM1State == 1):      
-
-                if (currentTime - FSM1LastTime > 1):
-                    angle = 90
-                    pwm_servo.start(set_duty_cycle(angle))
-                    FSM1NextState = 2
-                    FSM1LastTime = currentTime
-                    print ("Move to 90 degrees")
-
-                else:
-                    FSM1NextState = 1
-
-            # State 2: angle of 90 or on the way there
-            elif (FSM1State == 2):      
-
-                if (currentTime - FSM1LastTime > 1):
-                    angle = 135
-                    pwm_servo.start(set_duty_cycle(angle))
-                    FSM1NextState = 3
-                    FSM1LastTime = currentTime
-                    print ("Move to 135 degrees")
-
-                else:
-                    FSM1NextState = 2
-
-            # State 3: angle of 135 or on the way there
-            elif (FSM1State == 3):      
-
-                if (currentTime - FSM1LastTime > 1):
-                    angle = 180
-                    pwm_servo.start(set_duty_cycle(angle))
-                    FSM1NextState = 4
-                    FSM1LastTime = currentTime
-                    print ("Move to 180 degrees")
-
-                else:
-                    FSM1NextState = 3
+                  
 
             # State 4: angle of 180 or on the way there
-            elif (FSM1State == 4):      
+            elif (FSM1State == 1):      
 
                 if (currentTime - FSM1LastTime > 1):
                     angle = 0
@@ -115,7 +77,7 @@ if __name__ == '__main__':
                     print ("Move to 0 degrees")
 
                 else:
-                    FSM1NextState = 4
+                    FSM1NextState = 1
                     
             # State ??
             else:
