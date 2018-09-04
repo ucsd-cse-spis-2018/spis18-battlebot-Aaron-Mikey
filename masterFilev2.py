@@ -88,8 +88,8 @@ def servoRunner():
 '''MOTOR METHOD'''
 def moveForward():
     #Move Forward
-    GPIO.output(GPIO_Ain1, True)
-    GPIO.output(GPIO_Ain2, False)
+    GPIO.output(GPIO_Ain1, False)
+    GPIO.output(GPIO_Ain2, True)
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, True)
     pwmA.ChangeDutyCycle(100)
@@ -98,8 +98,8 @@ def moveForward():
     time.sleep(0.5)
 
 def moveBackward():
-    GPIO.output(GPIO_Ain1, False)
-    GPIO.output(GPIO_Ain2, True)
+    GPIO.output(GPIO_Ain1, True)
+    GPIO.output(GPIO_Ain2, False)
     GPIO.output(GPIO_Bin1, True)
     GPIO.output(GPIO_Bin2, False)
     pwmA.ChangeDutyCycle(33)
@@ -108,10 +108,10 @@ def moveBackward():
     time.sleep(0.5)
 
 def turnLeft():
-    GPIO.output(GPIO_Ain1, True)
-    GPIO.output(GPIO_Ain2, False)
-    GPIO.output(GPIO_Bin1, False)
-    GPIO.output(GPIO_Bin2, True)
+    GPIO.output(GPIO_Ain1, False)
+    GPIO.output(GPIO_Ain2, True)
+    GPIO.output(GPIO_Bin1, True)
+    GPIO.output(GPIO_Bin2, False)
     pwmA.ChangeDutyCycle(75)               # right wheel faster
     pwmB.ChangeDutyCycle(0)               # left wheel slower
     print ("Turning Left")
