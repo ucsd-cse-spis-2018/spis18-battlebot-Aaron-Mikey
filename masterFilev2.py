@@ -192,10 +192,13 @@ def colorDetect():
         maxWhite=max(maxWhite,numPixRight)
         if maxWhite==numPixLeft:
             print("It's on the left")
+            turnLeft()
         elif maxWhite==numPixMid:
             print("It's in the middle")
+            moveForward()
         else:
-            print("it's on the right")
+            print("It's on the right")
+            turnRight()
 
         # Show the frames
         # The waitKey command is needed to force openCV to show the image

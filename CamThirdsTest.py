@@ -75,7 +75,7 @@ if __name__ == '__main__':
             # Bitwise AND of the mask and the original image
             image_masked = cv2.bitwise_and(image, image, mask = ourmask)
 
-             #counts pixels in left, mid, and right pixels
+            #counts pixels in left, mid, and right pixels
             maskLeft=ourmask[0 : 480, 0 : 213]
             maskMid=ourmask[0 : 480, 213 : 426]
             maskRight=ourmask[0 : 480, 426 : 640]
