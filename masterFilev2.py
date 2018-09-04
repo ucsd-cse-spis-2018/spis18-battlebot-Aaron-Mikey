@@ -37,13 +37,20 @@ GPIO.setup(GPIO_Bin1, GPIO.OUT)
 GPIO.setup(GPIO_Bin2, GPIO.OUT)
 GPIO.setup(GPIO_Bpwm, GPIO.OUT)
 
-'''# Helper function to set the duty cycle
-def set_duty_cycle(angle):
-    return ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
-
-# Create a PWM instance
-pwm_servo = GPIO.PWM(ServoPin, pwm_frequency)
-# --- End of the PWM setup ---'''
+'''Set up for motor movement'''
+# Both motors are stopped 
+GPIO.output(GPIO_Ain1, False)
+GPIO.output(GPIO_Ain2, False)
+GPIO.output(GPIO_Bin1, False)
+GPIO.output(GPIO_Bin2, False)
+#Set PWM parameters
+pwm_frequency1 = 50
+# Create the PWM instances  
+pwmA = GPIO.PWM(GPIO_Apwm, pwm_frequency1)
+pwmB = GPIO.PWM(GPIO_Bpwm, pwm_frequency1)
+pwmA.start(0)
+pwmB.start(0)
+    
     
 def servoRunner():
     '''SERVO METHOD'''
@@ -79,53 +86,37 @@ def servoRunner():
 
 
 '''MOTOR METHOD'''
-def motorRunner():
-    # Both motors are stopped 
-    GPIO.output(GPIO_Ain1, False)
-    GPIO.output(GPIO_Ain2, False)
-    GPIO.output(GPIO_Bin1, False)
-    GPIO.output(GPIO_Bin2, False)
-    # Set PWM parameters
-    pwm_frequency1 = 50
-
-    # Create the PWM instances  
-    pwmA = GPIO.PWM(GPIO_Apwm, pwm_frequency1)
-    pwmB = GPIO.PWM(GPIO_Bpwm, pwm_frequency1)
-
-    # Set the duty cycle (between 0 and 100)
-    # The duty cycle determines the speed of the wheels
-    pwmA.start(100)
-    pwmB.start(100)
+def moveForward():
     #Move Forward
     GPIO.output(GPIO_Ain1, True)
     GPIO.output(GPIO_Ain2, False)
     GPIO.output(GPIO_Bin1, False)
-    GPIO.output(GPIO_Bin2, True)            #Makes other wheel(L) move forward too
-    pwmA.ChangeDutyCycle(100)               # duty cycle between 0 and 100
-    pwmB.ChangeDutyCycle(100)               # duty cycle between 0 and 100
-    print ("Forward full speed")
+    GPIO.output(GPIO_Bin2, True)
+    pwmA.ChangeDutyCycle(100)
+    pwmB.ChangeDutyCycle(100)
+    print("Forward")
     time.sleep(1)
 
-    #Move Backward
+def moveBackward():
     GPIO.output(GPIO_Ain1, False)
     GPIO.output(GPIO_Ain2, True)
     GPIO.output(GPIO_Bin1, True)
     GPIO.output(GPIO_Bin2, False)
-    pwmA.ChangeDutyCycle(33)                # duty cycle between 0 and 100
-    pwmB.ChangeDutyCycle(33)                # duty cycle between 0 and 100
-    print ("Backward third speed")
+    pwmA.ChangeDutyCycle(33)
+    pwmB.ChangeDutyCycle(33)
+    print("Backward")
     time.sleep(1)
 
-    #Turn Left
+def turnLeft():
     GPIO.output(GPIO_Ain1, True)
     GPIO.output(GPIO_Ain2, False)
     GPIO.output(GPIO_Bin1, False)
-    GPIO.output(GPIO_Bin2, True)    #Makes other wheel move forward too
+    GPIO.output(GPIO_Bin2, True)
     pwmA.ChangeDutyCycle(75)               # right wheel faster
     pwmB.ChangeDutyCycle(0)               # left wheel slower
     print ("Turning Left")
     time.sleep(1)
-
+def turnRight():
     #Turn Right
     GPIO.output(GPIO_Ain1, True)
     GPIO.output(GPIO_Ain2, False)
@@ -136,28 +127,8 @@ def motorRunner():
     print ("Turning Right")
     time.sleep(1)
 
-            
-    GPIO.output(GPIO_Ain1, False)
-    GPIO.output(GPIO_Ain2, False)
-    GPIO.output(GPIO_Bin1, False)
-    GPIO.output(GPIO_Bin2, False)
-    print ("Stop")
-    time.sleep(1)
-
-
-'''IR PROXIMITY METHOD'''
-def readir(pin):
-    GPIO.setup(pin,GPIO.OUT)
-    GPIO.output(pin,False)
-    time.sleep(0.1)
-    GPIO.setup(pin,GPIO.IN)
-    i=GPIO.input(pin)
-    if i==False:
-        print("No intruders",i)
-    elif i==True:
-        print("Intruders identified",i)
-
-
+    
+    
 
 '''CAMERA METHODS'''
 def colorDetect():
@@ -203,26 +174,28 @@ def colorDetect():
         # The colors in range are set to white (255), while the colors not in range are set to black (0)
         ourmask = cv2.inRange(image_hsv, lowerColorThreshold, upperColorThreshold)
 
-        # Count the number of white pixels in the mask
-        numpixels = cv2.countNonZero(ourmask)
-        print("Number of pixels in the color range:", numpixels)
-       
-        # Get the size of the array (the mask is of type 'numpy')
-        # This should be 640 x 480 as defined earlier
-        numx, numy = ourmask.shape
-
-        # Select a part of the image and count the number of white pixels
-        ourmask_center = ourmask[ numx//4 : 3*numx//4 , numy//4 : 3*numy//4 ]
-        numpixels_center = cv2.countNonZero(ourmask_center)
-        print("Number of pixels in the color range in the center part of the image:", numpixels_center)
-           
+                   
         # Bitwise AND of the mask and the original image
         image_masked = cv2.bitwise_and(image, image, mask = ourmask)
 
-        #counts pixels in left, mid, and right pixels
-        maskLeft=ourmask[0:480,0:213]
-        maskMid=ourmask[0:480,213:426]
-        maskRight=ourmask[0:480,426:640]
+       #counts pixels in left, mid, and right pixels
+        maskLeft=ourmask[0 : 480, 0 : 213]
+        maskMid=ourmask[0 : 480, 213 : 426]
+        maskRight=ourmask[0 : 480, 426 : 640]
+        numPixLeft=cv2.countNonZero(maskLeft)
+        numPixMid=cv2.countNonZero(maskMid)
+        numPixRight=cv2.countNonZero(maskRight)
+        print("Number of pixels in the color range on the left part of the image:", numPixLeft)
+        print("Number of pixels in the color range in the center part of the image:", numPixMid)
+        print("Number of pixels in the color range on the right part of the image:", numPixRight)
+        maxWhite=max(numPixLeft,numPixMid)
+        maxWhite=max(maxWhite,numPixRight)
+        if maxWhite==numPixLeft:
+            print("It's on the left")
+        elif maxWhite==numPixMid:
+            print("It's in the middle")
+        else:
+            print("it's on the right")
 
         # Show the frames
         # The waitKey command is needed to force openCV to show the image
@@ -239,15 +212,13 @@ if __name__ == '__main__':
     try:
         # This code repeats forever
         while True:
-            servoRunner()
-            motorRunner()
-##            #IR PROXIMITY METHOD
-##            readir(IR_PIN)
-##            time.sleep(0.5)
-##            colorDetect()
+            #moveForward()
+            #moveBackward()
+            #turnLeft()
+            #turnRight()
+            colorDetect()
 
-        '''END OF MAIN METHOD RESULTS IN RUNNING SEQUENTIALLY
-        CAUSES SERVO TO TWITCH AT PICTURE DISPLAY'''   
+          
     # Reset by pressing CTRL + C
     except KeyboardInterrupt:
         print("Program stopped by User")
