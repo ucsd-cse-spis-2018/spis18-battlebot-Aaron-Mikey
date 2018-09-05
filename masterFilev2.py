@@ -83,10 +83,16 @@ def servoRunner():
     print ("Moving to angle 0")
     time.sleep(1)
                        
-    angle = 100
+    angle = 180
     setDutyCycle= ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
     pwm_servo.start(setDutyCycle)
-    print ("Moving to angle 100")
+    print ("Moving to angle 180")
+    time.sleep(1)
+
+    angle=0
+    setDutyCycle= ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
+    pwm_servo.start(setDutyCycle)
+    print ("Moving back to angle 0")
     time.sleep(1)
    
     # Create a PWM instance
@@ -98,16 +104,16 @@ def servoRunner():
 
 
 '''MOTOR METHOD'''
-def moveForward():
+def moveForward(speed):
     #Move Forward
     GPIO.output(GPIO_Ain1, False)
     GPIO.output(GPIO_Ain2, True)
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, True)
-    pwmA.ChangeDutyCycle(80)
-    pwmB.ChangeDutyCycle(80)
+    pwmA.ChangeDutyCycle(speed)
+    pwmB.ChangeDutyCycle(speed)
     print("Forward")
-    time.sleep(0.5)
+    time.sleep(0.0001)
 
 def moveBackward():
     GPIO.output(GPIO_Ain1, True)
@@ -124,7 +130,7 @@ def turnLeft():
     GPIO.output(GPIO_Ain2, True)
     GPIO.output(GPIO_Bin1, True)
     GPIO.output(GPIO_Bin2, False)
-    pwmA.ChangeDutyCycle(50)               # right wheel faster
+    pwmA.ChangeDutyCycle(100)               # right wheel faster
     pwmB.ChangeDutyCycle(0)               # left wheel slower
     print ("Turning Left")
     
@@ -137,7 +143,7 @@ def turnRight():
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
     pwmA.ChangeDutyCycle(0)               # right wheel slower
-    pwmB.ChangeDutyCycle(50)               # left wheel faster
+    pwmB.ChangeDutyCycle(100)               # left wheel faster
     print ("Turning Right")
     time.sleep(0.1)
 def stop():
@@ -216,16 +222,30 @@ def colorDetect():
         print("Number of pixels in the color range on the right part of the image:", numPixRight)
         maxWhite=max(numPixLeft,numPixMid)
         maxWhite=max(maxWhite,numPixRight)
-        if maxWhite==numPixLeft:
+        isZero=maxWhite==0
+        nonZero= maxWhite!=0
+        if maxWhite==numPixLeft: #and nonZero:
             print("It's on the left")
             turnLeft()
+            moveForward(10)
+            '''elif maxWhite==0:
+            print("Not on screen! Scanning room...")
+            turnLeft()
+            time.sleep(1)
+            if isZero:
+                turnRight()
+                time.sleep(0.5)
+                turnRight()
+                    if isZero:
+                        turnLeft()'''
         elif maxWhite==numPixMid:
             print("It's in the middle")
-            moveForward()
+            moveForward(80)
         else:
             print("It's on the right")
             turnRight()
-        if analogSensor()>300 and (maxWhite==numPixMid or maxWhite==numPixRight):
+            moveForward(1)
+        if analogSensor()>250 and ( (maxWhite==numPixMid and nonZero) or (maxWhite==numPixRight and nonZero) ):
             servoRunner()
         # Show the frames
         # The waitKey command is needed to force openCV to show the image
