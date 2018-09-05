@@ -9,22 +9,34 @@ import time        #used in cam,IRProximity,motorTesterNew,servoTester
 import numpy as np
 #from IRProximityTestNew
 import RPi.GPIO as GPIO     #used in IRProximity,motorTesterNew,servoTester
+#from AnalogTester
+import Adafruit_GPIO.SPI as SPI
+import Adafruit_MCP3008
 
 #GPIO Mode(BOARD/BCM)
-GPIO.setmode(GPIO.BOARD)
+GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)    #-----for when I get those errors
 '''set GPIO Pins'''
     #Servo Pins
-ServoPin = 7     #GPIO Pin for servo
+ServoPin =4 #7     #GPIO Pin for servo
     #Motor Pins
-GPIO_Ain1 = 11
-GPIO_Ain2 = 13
-GPIO_Apwm = 15
-GPIO_Bin1 = 29
-GPIO_Bin2 = 31
-GPIO_Bpwm = 33
+GPIO_Ain1 =17 #11
+GPIO_Ain2 =27 #13
+GPIO_Apwm =22 #15
+GPIO_Bin1 =5 #29
+GPIO_Bin2 =6 #31
+GPIO_Bpwm =13 #33
     #IRProximitySensor Pins
-IR_PIN=16
+IR_PIN=23 #16
+    # Analog Sensor
+'''#Software SPI
+# The library interface uses BCM labeling
+# Connect the chip to the following pins
+#       CLK to GPIO 18 (physical pin 12)
+#       MISO to GPIO 23 (physical pin 16)
+#       MOSI to GPIO 24 (physical pin 18)
+#       CS to GPIO 25 (physical pin 22) '''
+mcp = Adafruit_MCP3008.MCP3008(clk=18,cs=25,miso=23,mosi=24)
 
 '''Setting up GPIO direction(IN/OUT)'''
     #Setup for servo, pin mode to output
@@ -128,8 +140,20 @@ def turnRight():
     pwmB.ChangeDutyCycle(75)               # left wheel faster
     print ("Turning Right")
     time.sleep(0.1)
+def stop():
+    #Stop
+    GPIO.output(GPIO_Ain1, False)
+    GPIO.output(GPIO_Ain2, False)
+    GPIO.output(GPIO_Bin1, False)
+    GPIO.output(GPIO_Bin2, False)
+    print("Stopping")
+    time.sleep(3)
 
-    
+def analogSensor():
+    val = mcp.read_adc(0)
+    print(val)
+    return val
+    time.sleep(0.5)
     
 
 '''CAMERA METHODS'''
@@ -201,7 +225,8 @@ def colorDetect():
         else:
             print("It's on the right")
             turnRight()
-
+        if analogSensor()>600:
+            stop()
         # Show the frames
         # The waitKey command is needed to force openCV to show the image
         cv2.imshow("Frame", image)
@@ -222,6 +247,10 @@ if __name__ == '__main__':
             #turnLeft()
             #turnRight()
             colorDetect()
+            #analogSensor()
+            #time.sleep(2)
+            #stop()
+            #time.sleep(2)
 
           
     # Reset by pressing CTRL + C

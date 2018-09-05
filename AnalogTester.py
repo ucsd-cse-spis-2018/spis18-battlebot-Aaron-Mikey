@@ -26,7 +26,7 @@ if __name__ == '__main__':
             #    values[i] = mcp.read_adc(i)
             val = mcp.read_adc(0)
             print(val)
-            time.sleep(0.5)
+            time.sleep(0.1)
             
             
     
