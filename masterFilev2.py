@@ -104,8 +104,8 @@ def moveForward():
     GPIO.output(GPIO_Ain2, True)
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, True)
-    pwmA.ChangeDutyCycle(100)
-    pwmB.ChangeDutyCycle(100)
+    pwmA.ChangeDutyCycle(80)
+    pwmB.ChangeDutyCycle(80)
     print("Forward")
     time.sleep(0.5)
 
@@ -124,7 +124,7 @@ def turnLeft():
     GPIO.output(GPIO_Ain2, True)
     GPIO.output(GPIO_Bin1, True)
     GPIO.output(GPIO_Bin2, False)
-    pwmA.ChangeDutyCycle(75)               # right wheel faster
+    pwmA.ChangeDutyCycle(50)               # right wheel faster
     pwmB.ChangeDutyCycle(0)               # left wheel slower
     print ("Turning Left")
     
@@ -137,7 +137,7 @@ def turnRight():
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
     pwmA.ChangeDutyCycle(0)               # right wheel slower
-    pwmB.ChangeDutyCycle(75)               # left wheel faster
+    pwmB.ChangeDutyCycle(50)               # left wheel faster
     print ("Turning Right")
     time.sleep(0.1)
 def stop():
