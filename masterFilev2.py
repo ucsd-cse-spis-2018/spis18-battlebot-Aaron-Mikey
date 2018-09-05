@@ -225,9 +225,8 @@ def colorDetect():
         else:
             print("It's on the right")
             turnRight()
-        if analogSensor()>600:
-            if maxWhite==numPixMid:
-                servoRunner()
+        if analogSensor()>300 and (maxWhite==numPixMid or maxWhite==numPixRight):
+            servoRunner()
         # Show the frames
         # The waitKey command is needed to force openCV to show the image
         cv2.imshow("Frame", image)
