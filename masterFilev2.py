@@ -81,13 +81,13 @@ def servoRunner():
     setDutyCycle= ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
     pwm_servo.start(setDutyCycle)
     print ("Moving to angle 0")
-    time.sleep(0.5)
+    time.sleep(1)
                        
     angle = 100
     setDutyCycle= ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
     pwm_servo.start(setDutyCycle)
     print ("Moving to angle 100")
-    time.sleep(0.5)
+    time.sleep(1)
    
     # Create a PWM instance
     pwm_servo = GPIO.PWM(ServoPin, pwm_frequency)
@@ -243,6 +243,7 @@ if __name__ == '__main__':
     try:
         # This code repeats forever
         while True:
+            #servoRunner()
             #moveForward()
             #moveBackward()
             #turnLeft()
@@ -252,6 +253,7 @@ if __name__ == '__main__':
             #time.sleep(2)
             #stop()
             #time.sleep(2)
+            
 
           
     # Reset by pressing CTRL + C

@@ -51,7 +51,7 @@ if __name__ == '__main__':
                        
             angle = 100
             pwm_servo.start(set_duty_cycle(angle))
-            print ("Moving to angle 180")
+            print ("Moving to angle 100")
             time.sleep(0.5)
 
             
