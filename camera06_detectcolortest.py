@@ -11,8 +11,10 @@ import numpy as np
 
 
 # Define the range colors to filter; these numbers represent HSV
-lowerColorThreshold = np.array([120, 161, 100])
-upperColorThreshold = np.array([255, 255, 255])
+# old lowerColorThreshold = np.array([120, 161, 100])
+# new upperColorThreshold = np.array([255, 255, 255])
+lowerColorThreshold = np.array([170, 50, 50])
+upperColorThreshold = np.array([180, 255, 255])
 
 
 # Initialize the camera and grab a reference to the frame
@@ -33,15 +35,10 @@ time.sleep(0.1)
 
 if __name__ == '__main__':
     try:
-        
-        # Continuously capture frames from the camera
-        # Note that the format is BGR instead of RGB because we want to use openCV later on and it only supports BGR
         for frame in camera.capture_continuous(rawframe, format = 'bgr', use_video_port = True):
 
             # Clear the stream in preparation for the next frame
-            rawframe.truncate(0)
-
-            
+            rawframe.truncate(0)  
             # Create a numpy array representing the image
             image = frame.array     
 
@@ -58,30 +55,39 @@ if __name__ == '__main__':
             # The colors in range are set to white (255), while the colors not in range are set to black (0)
             ourmask = cv2.inRange(image_hsv, lowerColorThreshold, upperColorThreshold)
 
-            # Count the number of white pixels in the mask
-            numpixels = cv2.countNonZero(ourmask)
-            print("Number of pixels in the color range:", numpixels)
-       
-            # Get the size of the array (the mask is of type 'numpy')
-            # This should be 640 x 480 as defined earlier
-            numx, numy = ourmask.shape
-
-            # Select a part of the image and count the number of white pixels
-            ourmask_center = ourmask[ numx//4 : 3*numx//4 , numy//4 : 3*numy//4 ]
-            numpixels_center = cv2.countNonZero(ourmask_center)
-            print("Number of pixels in the color range in the center part of the image:", numpixels_center)
-           
+                   
             # Bitwise AND of the mask and the original image
             image_masked = cv2.bitwise_and(image, image, mask = ourmask)
 
+            #counts pixels in left, mid, and right pixels
+            maskLeft=ourmask[0 : 480, 0 : 213]
+            maskMid=ourmask[0 : 480, 213 : 426]
+            maskRight=ourmask[0 : 480, 426 : 640]
+            numPixLeft=cv2.countNonZero(maskLeft)
+            numPixMid=cv2.countNonZero(maskMid)
+            numPixRight=cv2.countNonZero(maskRight)
+            print("Number of pixels in the color range on the left part of the image:", numPixLeft)
+            print("Number of pixels in the color range in the center part of the image:", numPixMid)
+            print("Number of pixels in the color range on the right part of the image:", numPixRight)
+            maxWhite=max(numPixLeft,numPixMid)
+            maxWhite=max(maxWhite,numPixRight)
+            isZero=maxWhite==0
+            nonZero= maxWhite!=0
+            if maxWhite==numPixLeft: #and nonZero:
+                print("It's on the left")
+            
+            elif maxWhite==numPixMid:
+                print("It's in the middle")
 
+            else:
+                print("It's on the right")
             # Show the frames
             # The waitKey command is needed to force openCV to show the image
             cv2.imshow("Frame", image)
             cv2.imshow("Mask", ourmask)
             cv2.imshow("Masked image", image_masked)  
             cv2.waitKey(1)
-
+            #time.sleep(2)
 
 
 
