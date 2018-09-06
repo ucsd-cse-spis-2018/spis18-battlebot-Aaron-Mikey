@@ -113,7 +113,7 @@ def moveForward(speed):
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
     print("Forward")
-    time.sleep(0.0001)
+    time.sleep(0.3)
 
 def moveBackward():
     GPIO.output(GPIO_Ain1, True)
@@ -123,18 +123,18 @@ def moveBackward():
     pwmA.ChangeDutyCycle(33)
     pwmB.ChangeDutyCycle(33)
     print("Backward")
-    time.sleep(0.5)
+    time.sleep(0.4)
 
 def turnLeft():
     GPIO.output(GPIO_Ain1, False)
     GPIO.output(GPIO_Ain2, True)
     GPIO.output(GPIO_Bin1, True)
     GPIO.output(GPIO_Bin2, False)
-    pwmA.ChangeDutyCycle(100)               # right wheel faster
-    pwmB.ChangeDutyCycle(0)               # left wheel slower
+    pwmA.ChangeDutyCycle(75)               # right wheel faster
+    pwmB.ChangeDutyCycle(50)               # left wheel slower
     print ("Turning Left")
     
-    time.sleep(0.1)
+    time.sleep(0.01)
     
 def turnRight():
     #Turn Right
@@ -142,10 +142,10 @@ def turnRight():
     GPIO.output(GPIO_Ain2, False)
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
-    pwmA.ChangeDutyCycle(0)               # right wheel slower
-    pwmB.ChangeDutyCycle(100)               # left wheel faster
+    pwmA.ChangeDutyCycle(50)               # right wheel slower
+    pwmB.ChangeDutyCycle(75)               # left wheel faster
     print ("Turning Right")
-    time.sleep(0.1)
+    time.sleep(0.01)
 def stop():
     #Stop
     GPIO.output(GPIO_Ain1, False)
@@ -165,8 +165,8 @@ def analogSensor():
 '''CAMERA METHODS'''
 def colorDetect():
     # Define the range colors to filter; these numbers represent HSV
-    lowerColorThreshold = np.array([120, 161, 100])
-    upperColorThreshold = np.array([255, 255, 255])
+    lowerColorThreshold = np.array([0, 100, 100])
+    upperColorThreshold = np.array([18, 255, 255])
 
     # Initialize the camera and grab a reference to the frame
     camera = picamera.PiCamera()
@@ -227,7 +227,7 @@ def colorDetect():
         if maxWhite==numPixLeft: #and nonZero:
             print("It's on the left")
             turnLeft()
-            moveForward(10)
+            #moveForward(50)
             '''elif maxWhite==0:
             print("Not on screen! Scanning room...")
             turnLeft()
@@ -244,7 +244,7 @@ def colorDetect():
         else:
             print("It's on the right")
             turnRight()
-            moveForward(1)
+            #moveForward(50)
         if analogSensor()>250 and ( (maxWhite==numPixMid and nonZero) or (maxWhite==numPixRight and nonZero) ):
             servoRunner()
         # Show the frames
