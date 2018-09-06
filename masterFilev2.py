@@ -80,20 +80,20 @@ def servoRunner():
     angle=0
     setDutyCycle= ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
     pwm_servo.start(setDutyCycle)
-    print ("Moving to angle 0")
-    time.sleep(1)
+    #print ("Moving to angle 0")
+    time.sleep(0.6)
                        
     angle = 180
     setDutyCycle= ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
     pwm_servo.start(setDutyCycle)
-    print ("Moving to angle 180")
-    time.sleep(1)
+    #print ("Moving to angle 180")
+    time.sleep(0.6)
 
     angle=0
     setDutyCycle= ((duty_max - duty_min) * float(angle) / 180.0 + duty_min)
     pwm_servo.start(setDutyCycle)
-    print ("Moving back to angle 0")
-    time.sleep(1)
+    #print ("Moving back to angle 0")
+    time.sleep(0.6)
    
     # Create a PWM instance
     pwm_servo = GPIO.PWM(ServoPin, pwm_frequency)
@@ -112,7 +112,7 @@ def moveForward(speed):
     GPIO.output(GPIO_Bin2, True)
     pwmA.ChangeDutyCycle(speed)
     pwmB.ChangeDutyCycle(speed)
-    print("Forward")
+    #print("Forward")
     time.sleep(0.3)
 
 def moveBackward():
@@ -122,7 +122,7 @@ def moveBackward():
     GPIO.output(GPIO_Bin2, False)
     pwmA.ChangeDutyCycle(33)
     pwmB.ChangeDutyCycle(33)
-    print("Backward")
+    #print("Backward")
     time.sleep(0.4)
 
 def turnLeft():
@@ -131,8 +131,8 @@ def turnLeft():
     GPIO.output(GPIO_Bin1, True)
     GPIO.output(GPIO_Bin2, False)
     pwmA.ChangeDutyCycle(75)               # right wheel faster
-    pwmB.ChangeDutyCycle(50)               # left wheel slower
-    print ("Turning Left")
+    pwmB.ChangeDutyCycle(0)               # left wheel slower
+    #print ("Turning Left")
     
     time.sleep(0.01)
     
@@ -142,9 +142,9 @@ def turnRight():
     GPIO.output(GPIO_Ain2, False)
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, True) #Makes other wheel move forward too
-    pwmA.ChangeDutyCycle(50)               # right wheel slower
+    pwmA.ChangeDutyCycle(0)               # right wheel slower
     pwmB.ChangeDutyCycle(75)               # left wheel faster
-    print ("Turning Right")
+    #print ("Turning Right")
     time.sleep(0.01)
 def stop():
     #Stop
@@ -152,12 +152,12 @@ def stop():
     GPIO.output(GPIO_Ain2, False)
     GPIO.output(GPIO_Bin1, False)
     GPIO.output(GPIO_Bin2, False)
-    print("Stopping")
+    #print("Stopping")
     time.sleep(3)
 
 def analogSensor():
     val = mcp.read_adc(0)
-    print(val)
+    #print(val)
     return val
     time.sleep(0.5)
     
@@ -165,8 +165,8 @@ def analogSensor():
 '''CAMERA METHODS'''
 def colorDetect():
     # Define the range colors to filter; these numbers represent HSV
-    lowerColorThreshold = np.array([0, 100, 100])
-    upperColorThreshold = np.array([18, 255, 255])
+    lowerColorThreshold = np.array([160, 53, 57])
+    upperColorThreshold = np.array([181, 255, 255])
 
     # Initialize the camera and grab a reference to the frame
     camera = picamera.PiCamera()
@@ -217,41 +217,31 @@ def colorDetect():
         numPixLeft=cv2.countNonZero(maskLeft)
         numPixMid=cv2.countNonZero(maskMid)
         numPixRight=cv2.countNonZero(maskRight)
-        print("Number of pixels in the color range on the left part of the image:", numPixLeft)
-        print("Number of pixels in the color range in the center part of the image:", numPixMid)
-        print("Number of pixels in the color range on the right part of the image:", numPixRight)
+        totalRedPix=numPixLeft+numPixMid+numPixRight
+        #print("Number of pixels in the color range on the left part of the image:", numPixLeft)
+        #print("Number of pixels in the color range in the center part of the image:", numPixMid)
+        #print("Number of pixels in the color range on the right part of the image:", numPixRight)
         maxWhite=max(numPixLeft,numPixMid)
         maxWhite=max(maxWhite,numPixRight)
-        isZero=maxWhite==0
-        nonZero= maxWhite!=0
         if maxWhite==numPixLeft: #and nonZero:
-            print("It's on the left")
+            #print("It's on the left")
             turnLeft()
-            #moveForward(50)
-            '''elif maxWhite==0:
-            print("Not on screen! Scanning room...")
-            turnLeft()
-            time.sleep(1)
-            if isZero:
-                turnRight()
-                time.sleep(0.5)
-                turnRight()
-                    if isZero:
-                        turnLeft()'''
+            #moveForward(33)
         elif maxWhite==numPixMid:
-            print("It's in the middle")
-            moveForward(80)
+            #print("It's in the middle")
+            moveForward(100)
         else:
-            print("It's on the right")
+            #print("It's on the right")
             turnRight()
-            #moveForward(50)
-        if analogSensor()>250 and ( (maxWhite==numPixMid and nonZero) or (maxWhite==numPixRight and nonZero) ):
+            #moveForward(33)
+        if totalRedPix>=45000:
+            #analogSensor()>20O 
             servoRunner()
         # Show the frames
         # The waitKey command is needed to force openCV to show the image
-        cv2.imshow("Frame", image)
+        #cv2.imshow("Frame", image)
         cv2.imshow("Mask", ourmask)
-        cv2.imshow("Masked image", image_masked)  
+        #cv2.imshow("Masked image", image_masked)  
         cv2.waitKey(1)
 
 
@@ -263,7 +253,7 @@ if __name__ == '__main__':
         # This code repeats forever
         while True:
             #servoRunner()
-            #moveForward()
+            #moveForward(100)
             #moveBackward()
             #turnLeft()
             #turnRight()
@@ -277,6 +267,6 @@ if __name__ == '__main__':
           
     # Reset by pressing CTRL + C
     except KeyboardInterrupt:
-        print("Program stopped by User")
+        #print("Program stopped by User")
         GPIO.cleanup()
 

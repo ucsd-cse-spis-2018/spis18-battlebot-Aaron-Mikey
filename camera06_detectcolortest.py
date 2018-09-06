@@ -13,8 +13,8 @@ import numpy as np
 # Define the range colors to filter; these numbers represent HSV
 # old lowerColorThreshold = np.array([120, 161, 100])
 # new upperColorThreshold = np.array([255, 255, 255])
-lowerColorThreshold = np.array([170, 50, 50])
-upperColorThreshold = np.array([180, 255, 255])
+lowerColorThreshold = np.array([160, 53, 57])
+upperColorThreshold = np.array([181, 255, 255])
 
 
 # Initialize the camera and grab a reference to the frame
